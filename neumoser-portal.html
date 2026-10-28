@@ -1,0 +1,1895 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neumoser | Portal de Resultados y Citas</title>
+  <meta name="description" content="Portal digital de Neumología y Servicios de Rehabilitación Neumoser: consulta tus resultados clínicos y gestiona tus citas médicas en línea." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════════
+       VARIABLES — Sistema de diseño Neumoser
+       Base: verde teal #0f6f6c (heredado del proyecto)
+       Mejoras: tipografía dual, espaciado sistemático,
+       jerarquía visual más clara, accesibilidad WCAG AA
+    ══════════════════════════════════════════════ */
+    :root {
+      --c-primary:       #0f6f6c;
+      --c-primary-dark:  #0b5452;
+      --c-primary-light: #e6f4f3;
+      --c-accent:        #2a9d8f;
+      --c-accent-soft:   #d4edea;
+      --c-warn:          #e07a5f;
+      --c-warn-soft:     #fdf0ec;
+      --c-success:       #2d6a4f;
+      --c-success-soft:  #d8f3e7;
+      --c-text:          #1a2b2b;
+      --c-text-soft:     #4a5a5a;
+      --c-text-xsoft:    #7a8a8a;
+      --c-bg:            #ffffff;
+      --c-bg-alt:        #f4f8f8;
+      --c-bg-deep:       #ecf4f3;
+      --c-border:        #dbe6e6;
+      --c-border-strong: #b5cfce;
+
+      --f-heading: 'Manrope', system-ui, sans-serif;
+      --f-body:    'Inter', system-ui, sans-serif;
+
+      --r:   8px;
+      --r-lg: 14px;
+      --r-xl: 20px;
+
+      --shadow-sm:  0 1px 4px rgba(15,111,108,.08);
+      --shadow-md:  0 4px 16px rgba(15,111,108,.12);
+      --shadow-lg:  0 8px 32px rgba(15,111,108,.14);
+
+      --max-w: 1060px;
+      --gap: 1.5rem;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--f-body);
+      font-size: 1rem;
+      color: var(--c-text);
+      background: var(--c-bg);
+      line-height: 1.65;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--c-primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1,h2,h3,h4 {
+      font-family: var(--f-heading);
+      line-height: 1.25;
+      color: var(--c-text);
+    }
+
+    /* ── Accesibilidad: foco visible (RF14) ── */
+    :focus-visible {
+      outline: 3px solid var(--c-primary);
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+
+    /*(RF14)*/
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: var(--c-primary); color: #fff;
+      padding: .5rem 1rem; z-index: 200;
+      border-radius: 0 0 var(--r) 0;
+    }
+    .skip-link:focus { left: 0; }
+
+    /* 
+       UTILIDADES
+    */
+    .container { max-width: var(--max-w); margin-inline: auto; padding-inline: 1.25rem; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+      padding: .2rem .6rem; border-radius: 99px;
+    }
+    .badge-success { background: var(--c-success-soft); color: var(--c-success); }
+    .badge-warn    { background: var(--c-warn-soft);    color: #b85c3e; }
+    .badge-info    { background: var(--c-accent-soft);  color: var(--c-primary-dark); }
+    .badge-neutral { background: var(--c-bg-alt);       color: var(--c-text-soft); }
+
+    /*
+       BOTONES
+   */
+    .btn {
+      display: inline-flex; align-items: center; gap: .45rem;
+      padding: .65rem 1.35rem;
+      border-radius: var(--r);
+      font-family: var(--f-body);
+      font-size: .95rem; font-weight: 600;
+      border: 2px solid transparent;
+      cursor: pointer; transition: background .18s, border-color .18s, color .18s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--c-primary); color: #fff;
+      border-color: var(--c-primary);
+    }
+    .btn-primary:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); text-decoration: none; color: #fff; }
+    .btn-outline {
+      background: transparent; color: var(--c-primary);
+      border-color: var(--c-primary);
+    }
+    .btn-outline:hover { background: var(--c-primary-light); text-decoration: none; }
+    .btn-ghost {
+      background: transparent; color: var(--c-text-soft);
+      border-color: var(--c-border);
+    }
+    .btn-ghost:hover { background: var(--c-bg-alt); text-decoration: none; }
+    .btn-danger {
+      background: #fdecea; color: #c0392b; border-color: #f5c6c2;
+    }
+    .btn-danger:hover { background: #f9d5d2; text-decoration: none; }
+    .btn-sm { padding: .4rem .9rem; font-size: .85rem; }
+    .btn-lg { padding: .85rem 1.8rem; font-size: 1.05rem; }
+
+    /* 
+       HEADER (RF01 navegación, RF02 acceder)
+   */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--c-border);
+      box-shadow: var(--shadow-sm);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding-block: .85rem;
+    }
+    .logo { display: flex; flex-direction: column; line-height: 1.2; }
+    .logo-name {
+      font-family: var(--f-heading); font-size: 1.2rem; font-weight: 800;
+      color: var(--c-primary-dark);
+    }
+    .logo-sub { font-size: .7rem; color: var(--c-text-xsoft); font-weight: 500; letter-spacing: .02em; }
+
+    .site-nav { margin-left: auto; }
+    .site-nav ul { display: flex; gap: 1.75rem; list-style: none; }
+    .site-nav a {
+      font-size: .9rem; font-weight: 500; color: var(--c-text-soft);
+      transition: color .15s;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--c-primary); text-decoration: none; }
+    .site-nav a.active { font-weight: 700; }
+
+    .header-actions { display: flex; align-items: center; gap: .75rem; margin-left: 1.25rem; }
+
+    /* Notificaciones badge (RF11) */
+    .notif-btn {
+      position: relative; background: none; border: none; cursor: pointer;
+      padding: .45rem; border-radius: var(--r); color: var(--c-text-soft);
+      transition: background .15s;
+    }
+    .notif-btn:hover { background: var(--c-bg-alt); }
+    .notif-count {
+      position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--c-warn); color: #fff;
+      font-size: .6rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ══════════════════════════
+       PÁGINAS — sistema de tabs (SPA simulada)
+    ══════════════════════════ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ══════════════════════════
+       ① PÁGINA DE INICIO (RF01)
+    ══════════════════════════ */
+    .hero {
+      background: linear-gradient(135deg, var(--c-primary-light) 0%, #fff 60%);
+      border-bottom: 1px solid var(--c-border);
+      padding-block: 4rem 3rem;
+    }
+    .hero-inner {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: center; gap: 3rem;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .8rem; font-weight: 600; color: var(--c-primary);
+      background: var(--c-primary-light); padding: .3rem .75rem;
+      border-radius: 99px; margin-bottom: 1.2rem;
+      border: 1px solid var(--c-border-strong);
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; margin-bottom: 1rem;
+      max-width: 22ch;
+    }
+    .hero h1 span { color: var(--c-primary); }
+    .hero p {
+      color: var(--c-text-soft); max-width: 52ch; margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+    .hero-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-xl); padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      min-width: 240px; text-align: center;
+    }
+    .hero-card .stat-num {
+      font-family: var(--f-heading); font-size: 2.4rem; font-weight: 800;
+      color: var(--c-primary); line-height: 1;
+    }
+    .hero-card .stat-label { font-size: .85rem; color: var(--c-text-soft); margin-top: .3rem; }
+    .hero-card hr { border: none; border-top: 1px solid var(--c-border); margin: 1rem 0; }
+
+    /* Servicios grid */
+    .section-title { font-size: 1.45rem; font-weight: 700; margin-bottom: .4rem; }
+    .section-sub   { color: var(--c-text-soft); font-size: .95rem; margin-bottom: 2rem; }
+    section { padding-block: 3rem; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .service-card {
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.5rem;
+      background: var(--c-bg-alt);
+      transition: box-shadow .2s, border-color .2s;
+      cursor: default;
+    }
+    .service-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--c-border-strong);
+    }
+    .service-icon {
+      width: 44px; height: 44px; border-radius: var(--r);
+      background: var(--c-primary-light);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem; color: var(--c-primary);
+    }
+    .service-icon svg { width: 22px; height: 22px; }
+    .service-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: .4rem; }
+    .service-card p  { font-size: .9rem; color: var(--c-text-soft); }
+
+    /* ══════════════════════════
+       ② LOGIN (RF02)
+    ══════════════════════════ */
+    .auth-wrap {
+      min-height: calc(100vh - 64px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem 1rem;
+      background: var(--c-bg-alt);
+    }
+    .auth-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-xl);
+      padding: 2.5rem 2.25rem;
+      width: 100%; max-width: 420px;
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-logo { text-align: center; margin-bottom: 1.75rem; }
+    .auth-logo .logo-name { font-size: 1.5rem; }
+    .auth-logo .logo-sub  { font-size: .78rem; }
+    .auth-title { font-size: 1.35rem; font-weight: 700; margin-bottom: .3rem; }
+    .auth-sub   { font-size: .9rem; color: var(--c-text-soft); margin-bottom: 1.75rem; }
+
+    .field { margin-bottom: 1.1rem; }
+    .field label {
+      display: block; font-weight: 500; font-size: .9rem;
+      margin-bottom: .35rem;
+    }
+    .field input[type="email"],
+    .field input[type="password"],
+    .field input[type="text"],
+    .field input[type="tel"],
+    .field input[type="date"],
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: .65rem .85rem;
+      border: 1.5px solid var(--c-border);
+      border-radius: var(--r);
+      font-family: var(--f-body); font-size: .95rem;
+      color: var(--c-text);
+      background: #fff;
+      transition: border-color .18s;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--c-primary); outline: none;
+      box-shadow: 0 0 0 3px rgba(15,111,108,.12);
+    }
+    .field .field-hint { font-size: .8rem; color: var(--c-text-xsoft); margin-top: .3rem; }
+    .field .field-error { font-size: .8rem; color: #c0392b; margin-top: .3rem; display: none; }
+
+    /* Mostrar error cuando input es inválido y fue tocado */
+    .field input.touched:invalid + .field-error { display: block; }
+    .field input.touched:invalid { border-color: #e74c3c; }
+
+    .row-check {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1.35rem;
+    }
+    .check-label {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .88rem; cursor: pointer;
+    }
+    .check-label input { accent-color: var(--c-primary); width: 16px; height: 16px; }
+    .forgot-link { font-size: .85rem; color: var(--c-primary); }
+
+    .auth-divider {
+      display: flex; align-items: center; gap: .75rem;
+      margin: 1.25rem 0; color: var(--c-text-xsoft); font-size: .8rem;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--c-border);
+    }
+
+    .role-selector {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem;
+      margin-bottom: 1.25rem;
+    }
+    .role-opt { display: none; }
+    .role-opt + label {
+      display: flex; flex-direction: column; align-items: center; gap: .35rem;
+      padding: .7rem .4rem; border: 1.5px solid var(--c-border);
+      border-radius: var(--r); cursor: pointer; font-size: .78rem;
+      font-weight: 500; color: var(--c-text-soft); transition: all .15s;
+      text-align: center;
+    }
+    .role-opt + label svg { width: 22px; height: 22px; color: var(--c-text-xsoft); transition: color .15s; }
+    .role-opt:checked + label {
+      border-color: var(--c-primary); background: var(--c-primary-light);
+      color: var(--c-primary);
+    }
+    .role-opt:checked + label svg { color: var(--c-primary); }
+
+    .auth-footer { text-align: center; font-size: .88rem; color: var(--c-text-soft); margin-top: 1.25rem; }
+    .auth-footer a { color: var(--c-primary); font-weight: 600; }
+
+    /* ══════════════════════════
+       ③ DASHBOARD PACIENTE (RF03, RF04, RF05, RF06, RF11)
+    ══════════════════════════ */
+    .dashboard-layout {
+      display: grid; grid-template-columns: 220px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    .sidebar {
+      background: var(--c-bg-alt);
+      border-right: 1px solid var(--c-border);
+      padding: 1.5rem 0;
+      position: sticky; top: 64px;
+      height: calc(100vh - 64px); overflow-y: auto;
+    }
+    .sidebar-section { margin-bottom: 1.5rem; }
+    .sidebar-label {
+      font-size: .68rem; font-weight: 700; color: var(--c-text-xsoft);
+      letter-spacing: .08em; padding: 0 1.25rem; margin-bottom: .5rem;
+      text-transform: uppercase;
+    }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a, .sidebar-nav li button {
+      display: flex; align-items: center; gap: .7rem;
+      padding: .6rem 1.25rem; width: 100%;
+      font-size: .9rem; font-weight: 500; color: var(--c-text-soft);
+      text-decoration: none; border: none; background: none; cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background .15s, color .15s;
+    }
+    .sidebar-nav li a:hover, .sidebar-nav li button:hover {
+      background: var(--c-bg-deep); color: var(--c-text);
+    }
+    .sidebar-nav li a.active, .sidebar-nav li button.active {
+      color: var(--c-primary); font-weight: 700;
+      background: var(--c-primary-light);
+      border-left-color: var(--c-primary);
+    }
+    .sidebar-nav svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .sidebar-user {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--c-border);
+      margin-top: auto; display: flex; align-items: center; gap: .75rem;
+    }
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--c-primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--f-heading); font-weight: 700; font-size: .9rem;
+      flex-shrink: 0;
+    }
+    .sidebar-user-info { line-height: 1.3; min-width: 0; }
+    .sidebar-user-name { font-size: .88rem; font-weight: 600; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sidebar-user-role { font-size: .72rem; color: var(--c-text-xsoft); }
+
+    /* Área de contenido */
+    .dash-content { padding: 2rem; overflow-y: auto; }
+    .dash-page { display: none; }
+    .dash-page.active { display: block; }
+
+    /* Panel de bienvenida */
+    .dash-greeting { margin-bottom: 2rem; }
+    .dash-greeting h2 { font-size: 1.4rem; font-weight: 700; }
+    .dash-greeting p  { color: var(--c-text-soft); font-size: .92rem; margin-top: .2rem; }
+
+    /* Stats rápidas (RF03) */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-card .sc-label { font-size: .78rem; color: var(--c-text-xsoft); font-weight: 500; margin-bottom: .4rem; }
+    .stat-card .sc-val { font-family: var(--f-heading); font-size: 1.9rem; font-weight: 800; color: var(--c-text); line-height: 1; }
+    .stat-card .sc-sub { font-size: .78rem; color: var(--c-primary); margin-top: .3rem; font-weight: 500; }
+
+    /* Tablas */
+    .table-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+      margin-bottom: 1.75rem;
+    }
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.4rem; border-bottom: 1px solid var(--c-border);
+    }
+    .table-header h3 { font-size: 1rem; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left; padding: .75rem 1.1rem;
+      font-size: .78rem; font-weight: 600; color: var(--c-text-xsoft);
+      letter-spacing: .04em; text-transform: uppercase;
+      background: var(--c-bg-alt); border-bottom: 1px solid var(--c-border);
+    }
+    tbody tr { transition: background .12s; }
+    tbody tr:hover { background: var(--c-bg-alt); }
+    tbody td {
+      padding: .8rem 1.1rem; font-size: .9rem;
+      border-bottom: 1px solid var(--c-border);
+      color: var(--c-text);
+    }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* ══════════════════════════
+       ④ AGENDAMIENTO (RF07, RF08, RF09)
+    ══════════════════════════ */
+    .schedule-grid {
+      display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem;
+    }
+    .calendar-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .cal-header h3 { font-size: 1rem; font-weight: 700; }
+    .cal-nav { display: flex; gap: .4rem; }
+    .cal-nav button {
+      width: 30px; height: 30px; border: 1px solid var(--c-border);
+      border-radius: var(--r); background: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .cal-nav button:hover { background: var(--c-bg-alt); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+    .cal-day-name { text-align: center; font-size: .72rem; font-weight: 600; color: var(--c-text-xsoft); padding: .3rem 0; }
+    .cal-day {
+      text-align: center; padding: .45rem .2rem; border-radius: var(--r);
+      font-size: .85rem; cursor: pointer; transition: background .12s;
+      position: relative;
+    }
+    .cal-day:hover     { background: var(--c-bg-alt); }
+    .cal-day.today     { background: var(--c-primary-light); color: var(--c-primary); font-weight: 700; }
+    .cal-day.selected  { background: var(--c-primary); color: #fff; font-weight: 700; }
+    .cal-day.has-cita::after {
+      content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: var(--c-warn);
+    }
+    .cal-day.selected.has-cita::after { background: rgba(255,255,255,.7); }
+    .cal-day.disabled  { color: var(--c-text-xsoft); cursor: default; }
+    .cal-day.empty     { cursor: default; }
+
+    .schedule-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+    .time-slots-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .time-slots-card h4 { font-size: .9rem; font-weight: 700; margin-bottom: 1rem; }
+    .slots-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .slot {
+      padding: .5rem; border: 1.5px solid var(--c-border);
+      border-radius: var(--r); text-align: center; font-size: .82rem;
+      cursor: pointer; transition: all .15s; font-weight: 500; color: var(--c-text-soft);
+    }
+    .slot:hover   { border-color: var(--c-primary); color: var(--c-primary); background: var(--c-primary-light); }
+    .slot.taken   { background: var(--c-bg-alt); color: var(--c-text-xsoft); cursor: not-allowed; text-decoration: line-through; }
+    .slot.picked  { background: var(--c-primary); border-color: var(--c-primary); color: #fff; }
+
+    /* ══════════════════════════
+       ⑤ HISTORIAL (RF05)
+    ══════════════════════════ */
+    .historial-filters {
+      display: flex; flex-wrap: wrap; gap: .75rem; align-items: flex-end;
+      margin-bottom: 1.5rem;
+    }
+    .historial-filters .field { margin: 0; }
+    .historial-filters label { font-size: .8rem; }
+    .historial-filters select, .historial-filters input {
+      padding: .5rem .75rem; font-size: .88rem;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap input { padding-left: 2.2rem; }
+    .search-wrap .search-icon {
+      position: absolute; left: .7rem; top: 50%; transform: translateY(-50%);
+      color: var(--c-text-xsoft); width: 16px; height: 16px;
+    }
+
+    /* Resultado expandible */
+    .result-row { cursor: pointer; }
+    .result-detail {
+      display: none; background: var(--c-bg-alt);
+      padding: 1rem 1.1rem;
+    }
+    .result-detail.open { display: table-row; }
+    .result-detail td { padding: 1rem 1.1rem; }
+    .result-detail-inner {
+      display: flex; gap: 1.25rem; align-items: flex-start; flex-wrap: wrap;
+    }
+    .result-meta { flex: 1; min-width: 200px; }
+    .result-meta p { font-size: .88rem; color: var(--c-text-soft); margin-bottom: .35rem; }
+    .result-meta p strong { color: var(--c-text); }
+
+    /* ══════════════════════════
+       ⑥ NOTIFICACIONES (RF11)
+    ══════════════════════════ */
+    .notif-panel {
+      max-height: 460px; overflow-y: auto;
+    }
+    .notif-item {
+      display: flex; gap: 1rem; padding: 1rem 1.4rem;
+      border-bottom: 1px solid var(--c-border);
+      transition: background .12s;
+    }
+    .notif-item:hover { background: var(--c-bg-alt); }
+    .notif-item.unread { background: var(--c-primary-light); }
+    .notif-item.unread:hover { background: #cce9e8; }
+    .notif-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--c-primary); flex-shrink: 0; margin-top: .4rem;
+    }
+    .notif-item.read .notif-dot { background: transparent; }
+    .notif-text { flex: 1; }
+    .notif-text p { font-size: .88rem; margin-bottom: .2rem; }
+    .notif-text time { font-size: .75rem; color: var(--c-text-xsoft); }
+
+    /* ══════════════════════════
+       ⑦ VIDEO TUTORIALES (RF12)
+    ══════════════════════════ */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .video-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+    }
+    .video-thumb {
+      background: linear-gradient(135deg, var(--c-primary-dark), var(--c-accent));
+      height: 140px; display: flex; align-items: center; justify-content: center;
+      position: relative; cursor: pointer;
+    }
+    .video-thumb .play-btn {
+      width: 48px; height: 48px; background: rgba(255,255,255,.9);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--c-primary); transition: transform .2s;
+    }
+    .video-thumb:hover .play-btn { transform: scale(1.1); }
+    .video-dur {
+      position: absolute; bottom: 8px; right: 10px;
+      background: rgba(0,0,0,.6); color: #fff; font-size: .7rem;
+      padding: .15rem .45rem; border-radius: 4px;
+    }
+    .video-info { padding: 1rem 1.1rem; }
+    .video-info h4 { font-size: .9rem; font-weight: 700; margin-bottom: .3rem; }
+    .video-info p  { font-size: .8rem; color: var(--c-text-soft); }
+
+    /* ══════════════════════════
+       ⑧ PERFIL (RF13)
+    ══════════════════════════ */
+    .profile-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.75rem;
+      margin-bottom: 1.5rem; box-shadow: var(--shadow-sm);
+    }
+    .avatar-lg {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--c-primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--f-heading); font-weight: 800; font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .profile-name { font-size: 1.2rem; font-weight: 700; margin-bottom: .15rem; }
+    .profile-sub  { font-size: .85rem; color: var(--c-text-soft); }
+
+    .form-card {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1.75rem;
+      box-shadow: var(--shadow-sm); margin-bottom: 1.25rem;
+    }
+    .form-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; padding-bottom: .75rem; border-bottom: 1px solid var(--c-border); }
+    .fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ══════════════════════════
+       ⑨ MODAL (RF08 cancelar cita, RF06 descargar)
+    ══════════════════════════ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(26,43,43,.45); z-index: 300;
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--r-xl);
+      padding: 2rem; width: 100%; max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      animation: modal-in .2s ease;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(-12px) scale(.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .modal-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .modal-icon.warn { background: var(--c-warn-soft); color: var(--c-warn); }
+    .modal-icon.success { background: var(--c-success-soft); color: var(--c-success); }
+    .modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+    .modal p  { font-size: .9rem; color: var(--c-text-soft); margin-bottom: 1.5rem; }
+    .modal-actions { display: flex; gap: .75rem; }
+
+    /* ══════════════════════════
+       ⑩ TOAST (RF11)
+    ══════════════════════════ */
+    #toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 400;
+      display: flex; align-items: center; gap: .75rem;
+      background: var(--c-text); color: #fff;
+      padding: .9rem 1.25rem; border-radius: var(--r-lg);
+      font-size: .88rem; box-shadow: var(--shadow-lg);
+      transform: translateY(120%); opacity: 0;
+      transition: transform .3s, opacity .3s;
+      max-width: 340px;
+    }
+    #toast.show { transform: none; opacity: 1; }
+    #toast.success { background: var(--c-success); }
+    #toast.error   { background: #c0392b; }
+
+    /* ══════════════════════════
+       RESPONSIVE (RNF07 / RF14)
+    ══════════════════════════ */
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card  { display: none; }
+      .dashboard-layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static; height: auto;
+        border-right: none; border-bottom: 1px solid var(--c-border);
+      }
+      .schedule-grid { grid-template-columns: 1fr; }
+      .fields-row { grid-template-columns: 1fr; }
+      .site-nav { display: none; }
+    }
+    @media (max-width: 480px) {
+      .header-inner { gap: .75rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .auth-card { padding: 1.75rem 1.25rem; }
+    }
+
+    /* ══════════════════════════
+       PREFERS REDUCED MOTION
+    ══════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    /* ══════════════════════════
+       SECCIÓN RF: 20 requerimientos
+    ══════════════════════════ */
+    .rf-section {
+      background: var(--c-bg-alt); border-top: 1px solid var(--c-border);
+      padding-block: 3rem;
+    }
+    .rf-section .section-title { font-size: 1.3rem; margin-bottom: .3rem; }
+    .rf-list {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: .85rem; margin-top: 1.5rem;
+    }
+    .rf-item {
+      background: #fff; border: 1px solid var(--c-border);
+      border-radius: var(--r-lg); padding: 1rem 1.2rem;
+      display: flex; gap: .9rem; align-items: flex-start;
+      box-shadow: var(--shadow-sm);
+    }
+    .rf-num {
+      font-family: var(--f-heading); font-size: .75rem; font-weight: 800;
+      color: var(--c-primary); background: var(--c-primary-light);
+      padding: .2rem .55rem; border-radius: 99px;
+      white-space: nowrap; flex-shrink: 0; margin-top: .05rem;
+    }
+    .rf-item p { font-size: .88rem; color: var(--c-text-soft); line-height: 1.5; }
+    .rf-item p strong { color: var(--c-text); display: block; margin-bottom: .15rem; font-size: .9rem; }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--c-border);
+      background: var(--c-bg-alt); padding: 2.5rem 1.25rem;
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; max-width: var(--max-w); margin-inline: auto;
+    }
+    .footer-inner h4 { font-size: .9rem; font-weight: 700; color: var(--c-primary-dark); margin-bottom: .6rem; }
+    .footer-inner p, .footer-inner address {
+      font-size: .88rem; color: var(--c-text-soft); font-style: normal; line-height: 1.7;
+    }
+    .footer-copy {
+      text-align: center; font-size: .8rem; color: var(--c-text-xsoft);
+      margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--c-border);
+      max-width: var(--max-w); margin-inline: auto;
+    }
+  </style>
+</head>
+<body>
+
+<!-- RF14: Skip link para accesibilidad por teclado -->
+<a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+<!-- ══════════════════════════════════════════════
+     HEADER — RF01 navegación, RF02 acceso, RF11 notificaciones
+══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="container">
+    <div class="header-inner">
+      <a href="#" onclick="showPage('home')" style="text-decoration:none">
+        <div class="logo">
+          <span class="logo-name">Neumoser</span>
+          <span class="logo-sub">Neumología y Servicios de Rehabilitación</span>
+        </div>
+      </a>
+
+      <nav class="site-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="#" onclick="showPage('home');return false">Inicio</a></li>
+          <li><a href="#" onclick="showPage('dashboard');return false">Mi portal</a></li>
+          <li><a href="#servicios-section">Servicios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <!-- RF11: botón de notificaciones con contador -->
+        <button class="notif-btn" aria-label="Ver notificaciones (3 sin leer)"
+                onclick="showPage('dashboard');activateDash('notificaciones')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-count" aria-hidden="true">3</span>
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="showPage('login')">Iniciar sesión</button>
+        <button class="btn btn-primary btn-sm" onclick="showPage('register')">Registrarse</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ════════════════════════════════════════
+     PÁGINA ① — INICIO (RF01)
+════════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-eyebrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Portal digital seguro · Cúcuta, Colombia
+          </div>
+          <h1 id="hero-title">Tus resultados clínicos y citas, <span>siempre a tu alcance</span></h1>
+          <p>El portal de Neumoser te permite consultar y descargar tus resultados de neumología y rehabilitación respiratoria, y gestionar tus citas médicas sin desplazarte a la clínica.</p>
+          <div class="hero-cta">
+            <!-- RF02: acceder -->
+            <button class="btn btn-primary btn-lg" onclick="showPage('login')">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+              Acceder a mi cuenta
+            </button>
+            <!-- RF15: registro -->
+            <button class="btn btn-outline btn-lg" onclick="showPage('register')">Crear cuenta</button>
+          </div>
+        </div>
+        <!-- Estadística visual -->
+        <div class="hero-card" aria-hidden="true">
+          <div class="stat-num">1 240</div>
+          <div class="stat-label">Pacientes activos</div>
+          <hr>
+          <div class="stat-num" style="font-size:1.6rem">98 %</div>
+          <div class="stat-label">Resultados entregados en &lt; 24 h</div>
+          <hr>
+          <span class="badge badge-success">● Portal activo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios -->
+  <section id="servicios-section" aria-labelledby="serv-title">
+    <div class="container">
+      <h2 class="section-title" id="serv-title">Qué puedes hacer en el portal</h2>
+      <p class="section-sub">Cuatro funcionalidades principales diseñadas para el paciente de neumología y rehabilitación respiratoria.</p>
+      <div class="cards-grid">
+        <article class="service-card">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+          </div>
+          <h3>Consulta de resultados</h3>
+          <!-- RF04 -->
+          <p>Revisa tus resultados clínicos en cuanto estén disponibles, con tu historial completo ordenado por fecha.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <h3>Descarga en PDF</h3>
+          <!-- RF06 -->
+          <p>Descarga tus resultados en formato digital para guardarlos o compartirlos con otro especialista.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+          </div>
+          <h3>Agendamiento de citas</h3>
+          <!-- RF07 -->
+          <p>Solicita, modifica o cancela tus citas médicas según la disponibilidad de la clínica en tiempo real.</p>
+        </article>
+        <article class="service-card">
+          <div class="service-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 4a5 5 0 0 0-5 5v3l-1.5 3h13L17 12V9a5 5 0 0 0-5-5Z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg>
+          </div>
+          <h3>Notificaciones</h3>
+          <!-- RF11 -->
+          <p>Recibe avisos cuando tengas un resultado nuevo disponible o un cambio en tus citas médicas.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accesibilidad RF14 RF12 -->
+  <section style="background:var(--c-bg-alt);border-top:1px solid var(--c-border);border-bottom:1px solid var(--c-border)" aria-labelledby="acc-title">
+    <div class="container">
+      <h2 class="section-title" id="acc-title">Pensado para que cualquiera lo use</h2>
+      <p class="section-sub">Especialmente diseñado para pacientes adultos mayores y usuarios con poca experiencia digital.</p>
+      <div class="cards-grid" style="margin-top:1.5rem">
+        <div class="service-card" style="background:#fff">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div>
+          <h3>Video tutoriales</h3>
+          <!-- RF12 -->
+          <p>Guías en video paso a paso para cada tarea del portal. Disponibles en la sección de ayuda.</p>
+          <button class="btn btn-outline btn-sm" style="margin-top:1rem" onclick="showPage('dashboard');activateDash('tutoriales')">Ver tutoriales</button>
+        </div>
+        <div class="service-card" style="background:#fff">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <h3>Contraste y legibilidad</h3>
+          <p>Texto amplio, alto contraste verificado WCAG AA y compatible con lectores de pantalla (NVDA/JAWS).</p>
+        </div>
+        <div class="service-card" style="background:#fff">
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18" stroke-linecap="round" stroke-width="2.5"/></svg></div>
+          <h3>Adaptado a cualquier dispositivo</h3>
+          <p>Funciona en celular, tablet o computador sin necesidad de instalar ninguna aplicación.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+<!-- ════════════════════════════════════════
+     PÁGINA ② — LOGIN (RF02)
+════════════════════════════════════════ -->
+<div id="page-login" class="page">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="logo-name">Neumoser</div>
+        <div class="logo-sub">Neumología y Servicios de Rehabilitación</div>
+      </div>
+
+      <h1 class="auth-title">Iniciar sesión</h1>
+      <p class="auth-sub">Ingresa con tu correo y contraseña para acceder a tus resultados y citas.</p>
+
+      <!-- RF16: selección de rol -->
+      <div class="role-selector" role="group" aria-label="Selecciona tu tipo de usuario">
+        <input type="radio" name="rol" id="rol-paciente" class="role-opt" checked>
+        <label for="rol-paciente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Paciente
+        </label>
+        <input type="radio" name="rol" id="rol-medico" class="role-opt">
+        <label for="rol-medico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Personal médico
+        </label>
+        <input type="radio" name="rol" id="rol-admin" class="role-opt">
+        <label for="rol-admin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><path d="M20 8h-2m-4 0V6m0 4v-2m-4 2V8"/></svg>
+          Administrador
+        </label>
+      </div>
+
+      <form onsubmit="handleLogin(event)" novalidate>
+        <div class="field">
+          <label for="login-email">Correo electrónico</label>
+          <input type="email" id="login-email" name="correo"
+                 autocomplete="email" required
+                 placeholder="tu@correo.com"
+                 oninput="this.classList.add('touched')"/>
+          <span class="field-error">Ingresa un correo válido.</span>
+        </div>
+        <div class="field">
+          <label for="login-pass">Contraseña</label>
+          <input type="password" id="login-pass" name="clave"
+                 autocomplete="current-password" minlength="8" required
+                 placeholder="••••••••"
+                 oninput="this.classList.add('touched')"/>
+          <span class="field-error">Mínimo 8 caracteres.</span>
+          <p class="field-hint">Mínimo 8 caracteres.</p>
+        </div>
+        <div class="row-check">
+          <label class="check-label">
+            <input type="checkbox" name="recordarme"> Recordarme
+          </label>
+          <!-- RF17: recuperar contraseña -->
+          <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+          Iniciar sesión
+        </button>
+      </form>
+
+      <div class="auth-divider">o</div>
+
+      <div class="auth-footer">
+        ¿No tienes cuenta? <a href="#" onclick="showPage('register');return false">Regístrate aquí</a>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-login -->
+
+<!-- ════════════════════════════════════════
+     PÁGINA ③ — REGISTRO (RF15)
+════════════════════════════════════════ -->
+<div id="page-register" class="page">
+  <div class="auth-wrap" style="padding-block:2.5rem">
+    <div class="auth-card" style="max-width:500px">
+      <div class="auth-logo">
+        <div class="logo-name">Neumoser</div>
+        <div class="logo-sub">Neumología y Servicios de Rehabilitación</div>
+      </div>
+
+      <h1 class="auth-title">Crear cuenta</h1>
+      <p class="auth-sub">Regístrate para acceder a tus resultados clínicos y gestionar tus citas.</p>
+
+      <form onsubmit="handleRegister(event)" novalidate>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="field">
+            <label for="reg-nombre">Nombre</label>
+            <input type="text" id="reg-nombre" required placeholder="Ana">
+          </div>
+          <div class="field">
+            <label for="reg-apellido">Apellido</label>
+            <input type="text" id="reg-apellido" required placeholder="García">
+          </div>
+        </div>
+        <div class="field">
+          <label for="reg-doc">Número de documento</label>
+          <input type="text" id="reg-doc" required placeholder="1098765432">
+        </div>
+        <div class="field">
+          <label for="reg-tipo-doc">Tipo de documento</label>
+          <select id="reg-tipo-doc">
+            <option>Cédula de ciudadanía</option>
+            <option>Tarjeta de identidad</option>
+            <option>Pasaporte</option>
+            <option>Cédula de extranjería</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="reg-email">Correo electrónico</label>
+          <input type="email" id="reg-email" required placeholder="tu@correo.com">
+        </div>
+        <div class="field">
+          <label for="reg-tel">Teléfono</label>
+          <input type="tel" id="reg-tel" placeholder="315 000 0000">
+        </div>
+        <div class="field">
+          <label for="reg-pass">Contraseña</label>
+          <input type="password" id="reg-pass" minlength="8" required placeholder="Mínimo 8 caracteres">
+          <p class="field-hint">Usa letras, números y al menos un símbolo.</p>
+        </div>
+        <div class="field">
+          <label class="check-label" style="font-size:.85rem;font-weight:400">
+            <input type="checkbox" required>
+            Acepto la <a href="#" style="color:var(--c-primary)">política de tratamiento de datos personales</a> (Ley 1581 de 2012)
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:.5rem">
+          Crear mi cuenta
+        </button>
+      </form>
+      <div class="auth-footer">
+        ¿Ya tienes cuenta? <a href="#" onclick="showPage('login');return false">Inicia sesión</a>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-register -->
+
+<!-- ════════════════════════════════════════
+     PÁGINA ④ — DASHBOARD PACIENTE
+     RF03 resumen, RF04 resultados, RF05 historial,
+     RF06 descarga, RF07/RF08/RF09 citas,
+     RF11 notificaciones, RF12 tutoriales, RF13 perfil
+════════════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard-layout">
+
+    <!-- Sidebar de navegación -->
+    <aside class="sidebar" aria-label="Menú del portal">
+      <div class="sidebar-section">
+        <p class="sidebar-label">Mi espacio</p>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="#" class="active" id="nav-inicio" onclick="activateDash('inicio');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              Inicio
+            </a>
+          </li>
+          <li>
+            <a href="#" id="nav-resultados" onclick="activateDash('resultados');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+              Mis resultados
+            </a>
+          </li>
+          <li>
+            <a href="#" id="nav-citas" onclick="activateDash('citas');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+              Mis citas
+            </a>
+          </li>
+          <li>
+            <a href="#" id="nav-notificaciones" onclick="activateDash('notificaciones');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              Notificaciones
+              <span class="badge badge-warn" style="margin-left:auto;font-size:.6rem;padding:.1rem .45rem">3</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="sidebar-section">
+        <p class="sidebar-label">Ayuda</p>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="#" id="nav-tutoriales" onclick="activateDash('tutoriales');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Video tutoriales
+            </a>
+          </li>
+          <li>
+            <a href="#" id="nav-perfil" onclick="activateDash('perfil');return false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Mi perfil
+            </a>
+          </li>
+          <li>
+            <button onclick="showPage('home')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Cerrar sesión
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="sidebar-user">
+        <div class="avatar">AG</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Ana García</div>
+          <div class="sidebar-user-role">Paciente</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Contenido del dashboard -->
+    <div class="dash-content">
+
+      <!-- ── Panel inicio (RF03) ── -->
+      <div id="dash-inicio" class="dash-page active">
+        <div class="dash-greeting">
+          <h2>Buenos días, Ana 👋</h2>
+          <p>Tienes 3 notificaciones nuevas y tu próxima cita es el 25 de septiembre.</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="sc-label">Resultados disponibles</div>
+            <div class="sc-val">7</div>
+            <div class="sc-sub">↑ 2 esta semana</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-label">Próxima cita</div>
+            <div class="sc-val" style="font-size:1.1rem;margin-top:.2rem">25 Sep</div>
+            <div class="sc-sub">Espirometría · 9:00 a.m.</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-label">Notificaciones</div>
+            <div class="sc-val">3</div>
+            <div class="sc-sub" style="color:var(--c-warn)">Sin leer</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-label">Última descarga</div>
+            <div class="sc-val" style="font-size:1.1rem;margin-top:.2rem">10 Sep</div>
+            <div class="sc-sub">Rx de tórax</div>
+          </div>
+        </div>
+
+        <!-- Acceso rápido -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem">
+          <button class="btn btn-primary" onclick="activateDash('resultados')">Ver mis resultados</button>
+          <button class="btn btn-outline" onclick="activateDash('citas')">Agendar cita</button>
+          <button class="btn btn-ghost" onclick="activateDash('tutoriales')">Ver tutoriales</button>
+        </div>
+
+        <!-- Últimas citas -->
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Próximas citas</h3>
+            <button class="btn btn-outline btn-sm" onclick="activateDash('citas')">Ver todas</button>
+          </div>
+          <table aria-label="Próximas citas">
+            <thead><tr><th>Fecha</th><th>Hora</th><th>Especialidad</th><th>Personal</th><th>Estado</th><th></th></tr></thead>
+            <tbody>
+              <tr>
+                <td>25 sep 2026</td><td>9:00 a.m.</td><td>Espirometría</td><td>Dr. Mora</td>
+                <td><span class="badge badge-info">Confirmada</span></td>
+                <td><button class="btn btn-danger btn-sm" onclick="openModal('modal-cancelar')">Cancelar</button></td>
+              </tr>
+              <tr>
+                <td>12 oct 2026</td><td>10:30 a.m.</td><td>Polisomnografía</td><td>Dra. Ruiz</td>
+                <td><span class="badge badge-neutral">Pendiente</span></td>
+                <td><button class="btn btn-ghost btn-sm">Reagendar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /dash-inicio -->
+
+      <!-- ── Panel resultados (RF04, RF05, RF06) ── -->
+      <div id="dash-resultados" class="dash-page">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <div>
+            <h2 style="font-size:1.3rem;font-weight:700">Mis resultados</h2>
+            <p style="color:var(--c-text-soft);font-size:.9rem">Historial clínico completo · 7 resultados disponibles</p>
+          </div>
+        </div>
+
+        <!-- RF10: filtros de búsqueda -->
+        <div class="historial-filters">
+          <div class="field">
+            <label for="filtro-tipo">Tipo de examen</label>
+            <select id="filtro-tipo">
+              <option value="">Todos</option>
+              <option>Espirometría</option>
+              <option>Radiografía de tórax</option>
+              <option>Polisomnografía</option>
+              <option>Oximetría</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filtro-desde">Desde</label>
+            <input type="date" id="filtro-desde" value="2026-01-01">
+          </div>
+          <div class="field">
+            <label for="filtro-hasta">Hasta</label>
+            <input type="date" id="filtro-hasta" value="2026-09-22">
+          </div>
+          <div class="field search-wrap">
+            <label for="filtro-buscar">Buscar</label>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="filtro-buscar" placeholder="Nombre del examen…">
+          </div>
+          <button class="btn btn-primary btn-sm" style="margin-bottom:1.1rem">Filtrar</button>
+        </div>
+
+        <div class="table-card">
+          <table aria-label="Historial de resultados clínicos">
+            <thead>
+              <tr><th>Fecha</th><th>Tipo de examen</th><th>Médico</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+              <!-- RF04: resultado disponible · RF06: descargar -->
+              <tr class="result-row" onclick="toggleDetail('det-1')" style="cursor:pointer">
+                <td>10 sep 2026</td>
+                <td><strong>Radiografía de tórax</strong></td>
+                <td>Dr. Mora</td>
+                <td><span class="badge badge-success">Disponible</span></td>
+                <td onclick="event.stopPropagation()">
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-descarga')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar PDF
+                  </button>
+                </td>
+              </tr>
+              <tr id="det-1" class="result-detail"><td colspan="5">
+                <div class="result-detail-inner">
+                  <div class="result-meta">
+                    <p><strong>Diagnóstico</strong> Sin alteraciones significativas en campos pulmonares.</p>
+                    <p><strong>Médico responsable</strong> Dr. Carlos Mora — Neumólogo</p>
+                    <p><strong>Fecha emisión</strong> 10 de septiembre de 2026, 14:32 h</p>
+                  </div>
+                  <button class="btn btn-outline btn-sm" onclick="openModal('modal-descarga')">Ver PDF completo</button>
+                </div>
+              </td></tr>
+
+              <tr class="result-row" onclick="toggleDetail('det-2')">
+                <td>02 ago 2026</td>
+                <td><strong>Espirometría</strong></td>
+                <td>Dra. Ruiz</td>
+                <td><span class="badge badge-success">Disponible</span></td>
+                <td onclick="event.stopPropagation()">
+                  <button class="btn btn-primary btn-sm" onclick="openModal('modal-descarga')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar PDF
+                  </button>
+                </td>
+              </tr>
+              <tr id="det-2" class="result-detail"><td colspan="5">
+                <div class="result-detail-inner">
+                  <div class="result-meta">
+                    <p><strong>Diagnóstico</strong> FVC 88 %, FEV1 82 %. Patrón levemente restrictivo.</p>
+                    <p><strong>Médico responsable</strong> Dra. Laura Ruiz — Neumóloga</p>
+                    <p><strong>Fecha emisión</strong> 2 de agosto de 2026, 11:10 h</p>
+                  </div>
+                  <button class="btn btn-outline btn-sm" onclick="openModal('modal-descarga')">Ver PDF completo</button>
+                </div>
+              </td></tr>
+
+              <tr>
+                <td>15 jun 2026</td>
+                <td><strong>Oximetría nocturna</strong></td>
+                <td>Dr. Mora</td>
+                <td><span class="badge badge-warn">En proceso</span></td>
+                <td><span style="font-size:.82rem;color:var(--c-text-xsoft)">Disponible en 24 h</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /dash-resultados -->
+
+      <!-- ── Panel citas (RF07, RF08, RF09) ── -->
+      <div id="dash-citas" class="dash-page">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <div>
+            <h2 style="font-size:1.3rem;font-weight:700">Mis citas</h2>
+            <p style="color:var(--c-text-soft);font-size:.9rem">Agenda, modifica o cancela tus citas médicas</p>
+          </div>
+          <button class="btn btn-primary" onclick="openModal('modal-nueva-cita')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nueva cita
+          </button>
+        </div>
+
+        <!-- RF07: calendario para agendar -->
+        <div class="schedule-grid">
+          <div class="calendar-card">
+            <div class="cal-header">
+              <h3>Septiembre 2026</h3>
+              <div class="cal-nav">
+                <button aria-label="Mes anterior">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button aria-label="Mes siguiente">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="cal-grid">
+              <div class="cal-day-name">Lu</div><div class="cal-day-name">Ma</div>
+              <div class="cal-day-name">Mi</div><div class="cal-day-name">Ju</div>
+              <div class="cal-day-name">Vi</div><div class="cal-day-name">Sa</div>
+              <div class="cal-day-name">Do</div>
+              <!-- Semana 1: inicio en lunes 1 -->
+              <div class="cal-day">1</div><div class="cal-day">2</div>
+              <div class="cal-day">3</div><div class="cal-day">4</div>
+              <div class="cal-day">5</div>
+              <div class="cal-day disabled">6</div><div class="cal-day disabled">7</div>
+              <!-- Semana 2 -->
+              <div class="cal-day">8</div><div class="cal-day">9</div>
+              <div class="cal-day">10</div><div class="cal-day has-cita">11</div>
+              <div class="cal-day">12</div>
+              <div class="cal-day disabled">13</div><div class="cal-day disabled">14</div>
+              <!-- Semana 3 -->
+              <div class="cal-day">15</div><div class="cal-day">16</div>
+              <div class="cal-day">17</div><div class="cal-day">18</div>
+              <div class="cal-day">19</div>
+              <div class="cal-day disabled">20</div><div class="cal-day disabled">21</div>
+              <!-- Semana 4 -->
+              <div class="cal-day today">22</div>
+              <div class="cal-day">23</div><div class="cal-day">24</div>
+              <div class="cal-day selected has-cita" onclick="showToast('Cita seleccionada: 25 sep · 9:00 a.m.')">25</div>
+              <div class="cal-day">26</div>
+              <div class="cal-day disabled">27</div><div class="cal-day disabled">28</div>
+              <!-- Semana 5 -->
+              <div class="cal-day">29</div><div class="cal-day">30</div>
+              <div class="cal-day empty"></div><div class="cal-day empty"></div>
+              <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+            </div>
+            <div style="margin-top:1rem;display:flex;gap:.75rem;font-size:.78rem;color:var(--c-text-soft)">
+              <span style="display:flex;align-items:center;gap:.35rem"><span style="width:8px;height:8px;border-radius:50%;background:var(--c-warn)"></span>Cita agendada</span>
+              <span style="display:flex;align-items:center;gap:.35rem"><span style="width:10px;height:10px;border-radius:50%;background:var(--c-primary)"></span>Hoy</span>
+              <span style="display:flex;align-items:center;gap:.35rem;color:var(--c-text-xsoft)">Fines de semana no disponibles</span>
+            </div>
+          </div>
+
+          <!-- Horarios disponibles RF09 -->
+          <div class="schedule-sidebar">
+            <div class="time-slots-card">
+              <h4>Horarios disponibles · 25 sep</h4>
+              <div class="slots-grid">
+                <div class="slot picked">9:00 a.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">9:30 a.m.</div>
+                <div class="slot taken">10:00 a.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">10:30 a.m.</div>
+                <div class="slot taken">11:00 a.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">11:30 a.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">2:00 p.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">2:30 p.m.</div>
+                <div class="slot taken">3:00 p.m.</div>
+                <div class="slot" onclick="this.classList.toggle('picked')">3:30 p.m.</div>
+              </div>
+            </div>
+            <div class="time-slots-card">
+              <h4>Tu cita seleccionada</h4>
+              <p style="font-size:.85rem;color:var(--c-text-soft);margin-bottom:1rem">25 de septiembre · 9:00 a.m. · Espirometría · Dr. Mora</p>
+              <button class="btn btn-primary" style="width:100%;justify-content:center"
+                      onclick="openModal('modal-confirmar-cita')">Confirmar cita</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:.5rem">Limpiar selección</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RF08: tabla citas agendadas con opción cancelar -->
+        <div class="table-card" style="margin-top:1.5rem">
+          <div class="table-header">
+            <h3>Citas agendadas</h3>
+          </div>
+          <table aria-label="Citas agendadas">
+            <thead><tr><th>Fecha</th><th>Hora</th><th>Especialidad</th><th>Personal</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>25 sep 2026</td><td>9:00 a.m.</td><td>Espirometría</td><td>Dr. Mora</td>
+                <td><span class="badge badge-info">Confirmada</span></td>
+                <td style="display:flex;gap:.5rem">
+                  <button class="btn btn-ghost btn-sm">Reagendar</button>
+                  <button class="btn btn-danger btn-sm" onclick="openModal('modal-cancelar')">Cancelar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>12 oct 2026</td><td>10:30 a.m.</td><td>Polisomnografía</td><td>Dra. Ruiz</td>
+                <td><span class="badge badge-neutral">Pendiente</span></td>
+                <td style="display:flex;gap:.5rem">
+                  <button class="btn btn-ghost btn-sm">Reagendar</button>
+                  <button class="btn btn-danger btn-sm" onclick="openModal('modal-cancelar')">Cancelar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div><!-- /dash-citas -->
+
+      <!-- ── Panel notificaciones (RF11) ── -->
+      <div id="dash-notificaciones" class="dash-page">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+          <div>
+            <h2 style="font-size:1.3rem;font-weight:700">Notificaciones</h2>
+            <p style="color:var(--c-text-soft);font-size:.9rem">3 sin leer</p>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Marcar todas como leídas</button>
+        </div>
+        <div class="table-card">
+          <div class="notif-panel" id="notif-list">
+            <div class="notif-item unread" id="notif-1">
+              <div class="notif-dot"></div>
+              <div class="notif-text">
+                <p><strong>Resultado disponible</strong> — Tu radiografía de tórax del 10 sep ya está lista para descargar.</p>
+                <time>Hoy, 8:15 a.m.</time>
+              </div>
+              <button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="activateDash('resultados')">Ver</button>
+            </div>
+            <div class="notif-item unread" id="notif-2">
+              <div class="notif-dot"></div>
+              <div class="notif-text">
+                <p><strong>Recordatorio de cita</strong> — Tienes una espirometría el 25 de septiembre a las 9:00 a.m. con el Dr. Mora.</p>
+                <time>Ayer, 6:00 p.m.</time>
+              </div>
+              <button class="btn btn-outline btn-sm" style="flex-shrink:0" onclick="activateDash('citas')">Citas</button>
+            </div>
+            <div class="notif-item unread" id="notif-3">
+              <div class="notif-dot"></div>
+              <div class="notif-text">
+                <p><strong>Resultado disponible</strong> — Tu espirometría del 2 ago está lista.</p>
+                <time>20 sep, 3:44 p.m.</time>
+              </div>
+              <button class="btn btn-primary btn-sm" style="flex-shrink:0" onclick="activateDash('resultados')">Ver</button>
+            </div>
+            <div class="notif-item read">
+              <div class="notif-dot"></div>
+              <div class="notif-text">
+                <p>Tu cita del 2 de agosto fue confirmada exitosamente.</p>
+                <time>1 ago, 10:00 a.m.</time>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /dash-notificaciones -->
+
+      <!-- ── Panel tutoriales (RF12) ── -->
+      <div id="dash-tutoriales" class="dash-page">
+        <div style="margin-bottom:1.5rem">
+          <h2 style="font-size:1.3rem;font-weight:700">Video tutoriales</h2>
+          <p style="color:var(--c-text-soft);font-size:.9rem">Guías paso a paso para usar el portal sin dificultad</p>
+        </div>
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb" onclick="showToast('Reproduciendo tutorial: Cómo iniciar sesión…')">
+              <div class="play-btn" aria-label="Reproducir">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </div>
+              <span class="video-dur">2:14</span>
+            </div>
+            <div class="video-info">
+              <h4>¿Cómo iniciar sesión?</h4>
+              <p>Aprende a acceder al portal paso a paso con tu correo y contraseña.</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb" onclick="showToast('Reproduciendo tutorial: Cómo consultar resultados…')">
+              <div class="play-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <span class="video-dur">3:05</span>
+            </div>
+            <div class="video-info">
+              <h4>¿Cómo consultar mis resultados?</h4>
+              <p>Ubica y revisa tus resultados clínicos en tu historial digital.</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb" onclick="showToast('Reproduciendo tutorial: Cómo descargar resultados…')">
+              <div class="play-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <span class="video-dur">1:48</span>
+            </div>
+            <div class="video-info">
+              <h4>¿Cómo descargar un resultado en PDF?</h4>
+              <p>Guarda tus resultados en tu dispositivo o compártelos con otro médico.</p>
+            </div>
+          </div>
+          <div class="video-card">
+            <div class="video-thumb" onclick="showToast('Reproduciendo tutorial: Cómo agendar una cita…')">
+              <div class="play-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+              <span class="video-dur">4:22</span>
+            </div>
+            <div class="video-info">
+              <h4>¿Cómo agendar una cita médica?</h4>
+              <p>Selecciona la especialidad, el médico y el horario disponible.</p>
+            </div>
+          </div>
+        </div>
+      </div><!-- /dash-tutoriales -->
+
+      <!-- ── Panel perfil (RF13) ── -->
+      <div id="dash-perfil" class="dash-page">
+        <div style="margin-bottom:1.5rem">
+          <h2 style="font-size:1.3rem;font-weight:700">Mi perfil</h2>
+          <p style="color:var(--c-text-soft);font-size:.9rem">Gestiona tu información personal y configuración de cuenta</p>
+        </div>
+        <div class="profile-header">
+          <div class="avatar-lg">AG</div>
+          <div>
+            <div class="profile-name">Ana García Mendoza</div>
+            <div class="profile-sub">Paciente · CC 1098765432 · Cúcuta, N. de Santander</div>
+            <span class="badge badge-success" style="margin-top:.5rem">● Cuenta verificada</span>
+          </div>
+        </div>
+
+        <form onsubmit="handleSavePerfil(event)">
+          <div class="form-card">
+            <h3>Información personal</h3>
+            <div class="fields-row">
+              <div class="field">
+                <label for="p-nombre">Nombre</label>
+                <input type="text" id="p-nombre" value="Ana">
+              </div>
+              <div class="field">
+                <label for="p-apellido">Apellido</label>
+                <input type="text" id="p-apellido" value="García Mendoza">
+              </div>
+              <div class="field">
+                <label for="p-doc">Número de documento</label>
+                <input type="text" id="p-doc" value="1098765432">
+              </div>
+              <div class="field">
+                <label for="p-fecha">Fecha de nacimiento</label>
+                <input type="date" id="p-fecha" value="1985-04-12">
+              </div>
+              <div class="field">
+                <label for="p-tel">Teléfono</label>
+                <input type="tel" id="p-tel" value="315 000 0000">
+              </div>
+              <div class="field">
+                <label for="p-dir">Dirección</label>
+                <input type="text" id="p-dir" value="Calle 10 #5-32, Cúcuta">
+              </div>
+            </div>
+          </div>
+          <div class="form-card">
+            <h3>Datos de acceso</h3>
+            <div class="field" style="max-width:340px">
+              <label for="p-email">Correo electrónico</label>
+              <input type="email" id="p-email" value="ana.garcia@email.com">
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="showToast('Enlace de cambio de contraseña enviado al correo.','success')">Cambiar contraseña</button>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </form>
+      </div><!-- /dash-perfil -->
+
+    </div><!-- /dash-content -->
+  </div><!-- /dashboard-layout -->
+</div><!-- /page-dashboard -->
+
+</main>
+
+<!-- ══════════════════════════════════════════════
+     SECCIÓN 20 REQUERIMIENTOS FUNCIONALES
+══════════════════════════════════════════════ -->
+<section class="rf-section" aria-labelledby="rf-title">
+  <div class="container">
+    <h2 class="section-title" id="rf-title">20 Requerimientos Funcionales del Sistema</h2>
+    <p class="section-sub">Todos evidenciados en los layouts anteriores del portal Neumoser.</p>
+    <div class="rf-list">
+      <div class="rf-item">
+        <span class="rf-num">RF01</span>
+        <p><strong>Navegación principal del portal</strong>El sistema permite navegar entre las secciones Inicio, Mi portal, Servicios y Contacto desde el encabezado fijo, disponible en todas las páginas.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF02</span>
+        <p><strong>Inicio de sesión por rol</strong>El sistema permite al usuario autenticarse seleccionando su tipo de cuenta (Paciente, Personal médico o Administrador), ingresando su correo y contraseña.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF03</span>
+        <p><strong>Panel de resumen personal</strong>El sistema muestra al paciente un panel con el número de resultados disponibles, su próxima cita, notificaciones sin leer y la última descarga realizada.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF04</span>
+        <p><strong>Visualización de resultados clínicos</strong>El sistema muestra el listado de resultados del paciente con fecha, tipo de examen, médico responsable y estado (disponible / en proceso).</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF05</span>
+        <p><strong>Expansión de detalle por resultado</strong>El sistema permite al paciente expandir cada fila de resultado para visualizar el diagnóstico, el médico y la fecha de emisión sin abandonar la vista.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF06</span>
+        <p><strong>Descarga de resultado en PDF</strong>El sistema permite al paciente descargar cualquier resultado clínico disponible en formato PDF mediante un botón de acción con confirmación modal.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF07</span>
+        <p><strong>Agendamiento de cita mediante calendario</strong>El sistema presenta un calendario mensual donde el paciente selecciona un día hábil disponible y accede a los horarios habilitados para ese día.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF08</span>
+        <p><strong>Cancelación de cita con confirmación</strong>El sistema permite al paciente cancelar una cita agendada mostrando un modal de confirmación antes de ejecutar la acción, evitando cancelaciones accidentales.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF09</span>
+        <p><strong>Selección de horario disponible</strong>El sistema muestra los slots de hora disponibles y ocupados para la fecha seleccionada; el paciente elige uno y confirma la cita con un botón dedicado.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF10</span>
+        <p><strong>Filtrado y búsqueda del historial</strong>El sistema permite filtrar los resultados por tipo de examen, rango de fechas y texto libre, facilitando la localización de un estudio específico.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF11</span>
+        <p><strong>Centro de notificaciones</strong>El sistema muestra notificaciones en tiempo real sobre resultados disponibles y recordatorios de cita, con contador en el encabezado y opción de marcar todas como leídas.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF12</span>
+        <p><strong>Video tutoriales de ayuda</strong>El sistema ofrece una galería de videos cortos con guías paso a paso para cada tarea principal del portal, accesible desde la barra lateral.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF13</span>
+        <p><strong>Edición de perfil personal</strong>El sistema permite al usuario actualizar su nombre, apellido, documento, fecha de nacimiento, teléfono, dirección y correo, y cambiar su contraseña.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF14</span>
+        <p><strong>Accesibilidad y navegación por teclado</strong>El sistema incluye skip link, foco visible en todos los elementos interactivos y roles ARIA para compatibilidad con lectores de pantalla (NVDA/JAWS).</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF15</span>
+        <p><strong>Registro de nuevo paciente</strong>El sistema permite a un usuario sin cuenta registrarse ingresando nombre, apellido, tipo y número de documento, correo, teléfono y contraseña, con aceptación de política de datos.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF16</span>
+        <p><strong>Selección de rol en inicio de sesión</strong>El sistema presenta tres opciones de rol (Paciente, Personal médico, Administrador) como selector visual antes del formulario de autenticación.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF17</span>
+        <p><strong>Recuperación de contraseña</strong>El sistema ofrece un enlace "¿Olvidaste tu contraseña?" en el formulario de inicio de sesión que dispara el envío de un enlace de restablecimiento al correo registrado.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF18</span>
+        <p><strong>Cierre de sesión seguro</strong>El sistema permite al usuario cerrar su sesión desde la barra lateral del dashboard, redirigiendo a la página de inicio y limpiando el estado de autenticación.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF19</span>
+        <p><strong>Feedback inmediato con notificaciones toast</strong>El sistema muestra mensajes emergentes (toast) al confirmar citas, guardar cambios en el perfil, reproducir tutoriales o enviar el enlace de cambio de contraseña.</p>
+      </div>
+      <div class="rf-item">
+        <span class="rf-num">RF20</span>
+        <p><strong>Reagendamiento de cita</strong>El sistema permite al paciente reagendar una cita existente desde la tabla de citas agendadas, reutilizando el calendario y el selector de horarios para elegir la nueva fecha y hora.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="site-footer" id="contacto">
+  <div class="footer-inner">
+    <div>
+      <h4>Neumoser</h4>
+      <address>
+        Calle 10 #9E-84, La Riviera<br>
+        Cúcuta, Norte de Santander<br>
+        Tel: (607) 548 9100
+      </address>
+    </div>
+    <div>
+      <h4>Privacidad de tu información</h4>
+      <p>Tus datos clínicos son confidenciales y se tratan conforme a la Ley 1581 de 2012 de Colombia. Solo personal autorizado puede acceder a tu historial.</p>
+    </div>
+    <div>
+      <h4>Acceso rápido</h4>
+      <ul style="list-style:none;font-size:.88rem;line-height:2">
+        <li><a href="#" onclick="showPage('login');return false">Iniciar sesión</a></li>
+        <li><a href="#" onclick="showPage('register');return false">Crear cuenta</a></li>
+        <li><a href="#">Política de datos</a></li>
+        <li><a href="#">Preguntas frecuentes</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-copy">&copy; 2026 Neumoser S.A.S. · Todos los derechos reservados. · Desarrollado por estudiantes de Ing. de Sistemas, UDES Cúcuta.</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     MODALES
+══════════════════════════════════════════════ -->
+
+<!-- Modal cancelar cita (RF08) -->
+<div id="modal-cancelar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="mc-title">
+  <div class="modal">
+    <div class="modal-icon warn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16" stroke-linecap="round" stroke-width="2.5"/></svg>
+    </div>
+    <h3 id="mc-title">¿Cancelar esta cita?</h3>
+    <p>Estás a punto de cancelar tu cita del <strong>25 de septiembre · 9:00 a.m.</strong> con el Dr. Mora (Espirometría). Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="closeModal('modal-cancelar');showToast('Cita cancelada correctamente.','error')">Sí, cancelar cita</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-cancelar')">Volver</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal descarga PDF (RF06) -->
+<div id="modal-descarga" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="md-title">
+  <div class="modal">
+    <div class="modal-icon success">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </div>
+    <h3 id="md-title">Descargar resultado</h3>
+    <p>El archivo <strong>Radiografía_torax_10sep2026.pdf</strong> se descargará en tu dispositivo. Trátalo con confidencialidad.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('modal-descarga');showToast('Descarga iniciada correctamente.','success')">Descargar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-descarga')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nueva cita (RF07) -->
+<div id="modal-nueva-cita" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="mn-title">
+  <div class="modal" style="max-width:480px">
+    <h3 id="mn-title" style="margin-bottom:1.25rem">Nueva cita médica</h3>
+    <div class="field">
+      <label for="nc-especialidad">Especialidad</label>
+      <select id="nc-especialidad">
+        <option>Espirometría</option>
+        <option>Polisomnografía</option>
+        <option>Oximetría nocturna</option>
+        <option>Rehabilitación respiratoria</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="nc-medico">Personal médico</label>
+      <select id="nc-medico">
+        <option>Dr. Carlos Mora — Neumólogo</option>
+        <option>Dra. Laura Ruiz — Neumóloga</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="nc-motivo">Motivo de la cita</label>
+      <textarea id="nc-motivo" rows="2" style="width:100%;border:1.5px solid var(--c-border);border-radius:var(--r);padding:.65rem .85rem;font-family:var(--f-body);font-size:.95rem;resize:vertical" placeholder="Describa brevemente el motivo…"></textarea>
+    </div>
+    <p style="font-size:.82rem;color:var(--c-text-soft);margin-bottom:1.25rem">Selecciona el día y la hora en el calendario de la vista de citas.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('modal-nueva-cita');showToast('Cita creada. Selecciona día y hora en el calendario.','success')">Continuar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-nueva-cita')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal confirmar cita (RF09) -->
+<div id="modal-confirmar-cita" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="mcc-title">
+  <div class="modal">
+    <div class="modal-icon success">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <h3 id="mcc-title">Confirmar cita</h3>
+    <p>¿Deseas confirmar tu cita del <strong>25 de septiembre · 9:00 a.m.</strong> con el Dr. Mora (Espirometría)?</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeModal('modal-confirmar-cita');showToast('¡Cita confirmada! Recibirás un recordatorio.','success')">Confirmar</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirmar-cita')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast (RF19) -->
+<div id="toast" role="alert" aria-live="polite">
+  <svg id="toast-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span id="toast-msg">Mensaje</span>
+</div>
+
+<!-- 
+     JAVASCRIPT
+ -->
+<script>
+  /* ── Navegación entre páginas ── */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + id);
+    if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+  }
+
+  /* ── Navegación interna del dashboard ── */
+  function activateDash(id) {
+    showPage('dashboard');
+    document.querySelectorAll('.dash-page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('dash-' + id);
+    if (el) el.classList.add('active');
+    // Update sidebar active state
+    document.querySelectorAll('.sidebar-nav a, .sidebar-nav button').forEach(a => a.classList.remove('active'));
+    const navEl = document.getElementById('nav-' + id);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  /* ── Expandir detalle de resultado (RF05) ── */
+  function toggleDetail(id) {
+    const row = document.getElementById(id);
+    if (!row) return;
+    row.classList.toggle('open');
+  }
+
+  /* ── Modales ── */
+  function openModal(id) {
+    const m = document.getElementById(id);
+    if (m) { m.classList.add('open'); m.querySelector('button').focus(); }
+  }
+  function closeModal(id) {
+    const m = document.getElementById(id);
+    if (m) m.classList.remove('open');
+  }
+  // Cerrar modal al click fuera
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay')) {
+      e.target.classList.remove('open');
+    }
+  });
+  // Cerrar con Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+
+  /*Toast (RF19)*/
+  let toastTimer;
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toast-msg');
+    m.textContent = msg;
+    t.className = type ? type : '';
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /*Login handler (RF02)*/
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email');
+    const pass  = document.getElementById('login-pass');
+    email.classList.add('touched'); pass.classList.add('touched');
+    if (!email.validity.valid || !pass.validity.valid) return;
+    showPage('dashboard');
+    showToast('Bienvenida, Ana García 👋', 'success');
+  }
+
+  /* ── Register handler (RF15) ── */
+  function handleRegister(e) {
+    e.preventDefault();
+    showPage('login');
+    showToast('Cuenta creada. Ahora puedes iniciar sesión.', 'success');
+  }
+
+  /* ── Save perfil (RF13) ── */
+  function handleSavePerfil(e) {
+    e.preventDefault();
+    showToast('Cambios guardados correctamente.', 'success');
+  }
+
+  /* ── Marcar notificaciones como leídas (RF11) ── */
+  function markAllRead() {
+    document.querySelectorAll('.notif-item.unread').forEach(n => {
+      n.classList.remove('unread'); n.classList.add('read');
+      const dot = n.querySelector('.notif-dot');
+      if (dot) dot.style.background = 'transparent';
+    });
+    showToast('Todas las notificaciones marcadas como leídas.', 'success');
+  }
+</script>
+
+</body>
+</html>
