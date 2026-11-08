@@ -1,0 +1,27 @@
+{
+  "name": "neumoser-portal",
+  "version": "2.0.0",
+  "description": "Portal de resultados clínicos y citas de Neumoser (Neumología y Servicios de Rehabilitación, Cúcuta).",
+  "author": "Santiago Carreño Calceto",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --no-warnings=ExperimentalWarning server.js",
+    "dev": "node --no-warnings=ExperimentalWarning --watch server.js",
+    "test": "node --no-warnings=ExperimentalWarning --test --test-reporter=spec \"tests/unit/*.test.js\" \"tests/integracion/*.test.js\"",
+    "test:unit": "node --no-warnings=ExperimentalWarning --test --test-reporter=spec \"tests/unit/*.test.js\"",
+    "test:integracion": "node --no-warnings=ExperimentalWarning --test --test-reporter=spec \"tests/integracion/*.test.js\"",
+    "test:e2e": "node --no-warnings=ExperimentalWarning --test --test-reporter=spec --test-concurrency=1 --test-timeout=180000 \"tests/e2e/*.test.js\"",
+    "test:todo": "npm test && npm run test:e2e",
+    "test:cobertura": "node --no-warnings=ExperimentalWarning --test --test-reporter=spec --experimental-test-coverage --test-coverage-include=src/** \"tests/unit/*.test.js\" \"tests/integracion/*.test.js\"",
+    "playwright:instalar": "playwright install chromium"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
