@@ -176,11 +176,29 @@ npm run test:cobertura
 
 ![Cobertura de código](capturas/cobertura.png)
 
-### Integración continua
+### Integración continua en GitHub Actions
 
-`.github/workflows/pruebas.yml` ejecuta las pruebas unitarias, de integración, de cobertura y E2E en cada `push` a `main`. Los resultados quedan en la pestaña **Actions** del repositorio, y las capturas de la prueba E2E se pueden descargar como artefacto.
+`.github/workflows/pruebas.yml` ejecuta las pruebas unitarias, de integración, de cobertura y E2E en cada `push` a `main`. Los resultados quedan en la pestaña **Actions** del repositorio, y las capturas de la prueba E2E se pueden descargar como artefacto (`capturas-e2e`).
+
+Las siguientes capturas se tomaron directamente en GitHub. La ejecución terminó en **Success** y todos los pasos pasaron:
+
+<p>
+  <img src="capturas/github-actions-resumen.jpg" alt="Ejecución de GitHub Actions: Success" width="420">
+  <img src="capturas/github-actions-pasos.jpg" alt="Pasos del flujo en verde" width="420">
+</p>
+
+Salida de `npm test` en GitHub (**86 pruebas, 0 fallos**) y de las pruebas E2E con Playwright (**9 pruebas, 0 fallos**):
+
+<p>
+  <img src="capturas/github-actions-unitarias-integracion.jpg" alt="npm test en GitHub Actions: 86 pruebas pasan" width="420">
+  <img src="capturas/github-actions-e2e.jpg" alt="Pruebas E2E en GitHub Actions: 9 pruebas pasan" width="420">
+</p>
 
 ---
+
+## Autoría
+
+<img src="capturas/github-contributors.jpg" alt="Contributors: SantiagoCalceto" width="420">
 
 ## Seguridad
 
