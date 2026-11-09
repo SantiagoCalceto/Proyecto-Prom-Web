@@ -1,0 +1,37 @@
+name: Pruebas
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pruebas unitarias y de integración
+        run: npm test
+
+      - name: Cobertura
+        run: npm run test:cobertura
+
+      - name: Instalar Playwright y Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Pruebas de punta a punta
+        run: npm run test:e2e
+
+      - name: Guardar capturas de pantalla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-e2e
+          path: tests/capturas/
